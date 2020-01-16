@@ -5,6 +5,7 @@ FROM node:alpine
 # install jq for JSON parsing
 RUN apk add --update --no-cache git openssh ca-certificates openssl jq gettext xmlstarlet curl bash python3
 
+
 # install latest sfdx from npm
 RUN npm install sfdx-cli --global
 RUN sfdx --version
@@ -12,6 +13,7 @@ RUN sfdx plugins --core
 
 # Set Default values for SFDX
 ENV SFDX_AUTOUPDATE_DISABLE=false
+ENV SFDX_JSON_TO_STDOUT=true
 ENV SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
 ENV SFDX_DOMAIN_RETRY=true
 ENV SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
