@@ -17,7 +17,7 @@ Includes:
 
 Image on docker hub: https://hub.docker.com/r/depill/sfdx-cli/
 
-[![Docker Automated build](https://img.shields.io/docker/automated/depill/sfdx-cli.svg)](https://hub.docker.com/r/depill/sfdx-cli/builds/)
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/depill/sfdx-cli.svg)](https://hub.docker.com/r/depill/sfdx-cli/builds/)
 
 Image is automatically rebuilt on new releases of:
 - sfdx-cli (NPM package)
