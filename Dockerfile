@@ -26,6 +26,10 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 WORKDIR /home/node
 
-# Link the SFDX Plugin Scratcher
-RUN git clone https://github.com/depill/sfdx-plugin-scratcher.git
-RUN sfdx plugins:link sfdx-plugin-scratcher/.
+# Link the SFDX Texei & Shane Plugins ( does similar things as Scratcher did )
+RUN git clone https://github.com/texei/texei-sfdx-plugin.git
+RUN cd texei-sfdx-plugin && npm install
+RUN sfdx plugins:link .
+RUN cd .. && git@github.com:mshanemc/shane-sfdx-plugins.git
+RUN cd shane-sfdx-plugins && npm install
+RUN sfdx plugins:link .
