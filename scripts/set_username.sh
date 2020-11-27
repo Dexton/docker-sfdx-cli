@@ -23,7 +23,7 @@ function set_username() {
     
     sfdx config:set instanceUrl=$instanceUrl
 
-    local cmd="sfdx force:config:set ${property_to_set}=${property_to_set} --json" && (echo $cmd >&2)
+    local cmd="sfdx force:config:set ${property_to_set}=${accessToken} --json" && (echo $cmd >&2)
     local output=$($cmd) && (echo $output | jq '.' >&2)
 
     echo "----- END defaultusername -----"
