@@ -59,8 +59,7 @@ function authenticate() {
       
     local cmd="sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url -a $ORG_NAME" && (echo $cmd >&2)
     local output=$($cmd) && (echo $output >&2)
-    local cmd_display="sfdx force:org:display -u ${ORG_NAME} --json > dist/${ORG_NAME}.json" && (echo $cmd_display >&2)
-    local output_display=$($cmd_display) && (echo $output_display >&2)
+    sfdx force:org:display -u ${ORG_NAME} --json > dist/${ORG_NAME}.json
 
     local exit_code=$(cat dist/${ORG_NAME}.json | jq -r '.exitCode') && (echo $exit_code >&2)
     if [[ ( -n "$exit_code" ) && ( $exit_code -gt 0 ) ]]; then
