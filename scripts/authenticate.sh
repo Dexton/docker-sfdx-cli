@@ -47,7 +47,7 @@ function authenticate() {
     # Take the ServerKey from environment, decrypt the base64 nad put it into the Key
     (umask  077 ; echo $server_key | base64 -d > server.key)
 
-    if [ "$server_key" = "ORG" ]; then
+    if [ "$org_type" = "ORG" ]; then
       sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url
     else
       sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -d -r $instance_url
