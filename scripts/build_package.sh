@@ -27,7 +27,7 @@ function build_package_version() {
       if [ "$branch" = "main" ]; then
         local cmd="sfdx force:package:version:create -p $packageName -w 100 -x --json"
       else
-        local cmd="sfdx force:package:version:create -p $packageName -w 100 -x -b $1 --json"
+        local cmd="sfdx force:package:version:create -p $packageName -w 100 -x -b $branch --json"
       fi
       echo $cmd >&2
       local output=$($cmd) && (echo $output | jq '.' >&2)
