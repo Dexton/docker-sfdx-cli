@@ -62,6 +62,11 @@ function authenticate() {
     local cmd_display="sfdx force:org:display -u Org --json > dist/${ORG_NAME}.json" && (echo $cmd >&2)
     local output_display=$($cmd_display) && (echo $output >&2)
 
+    local exit_code=$(cat dist/${ORG_NAME}.json | jq -r '.exitCode') && (echo $exit_code >&2)
+    if [[ ( -n "$exit_code" ) && ( $exit_code -gt 0 ) ]]; then
+      echo "ERROR KILLING MYSELF"
+      exit 1
+    fi
 
   }
 
