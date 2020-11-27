@@ -4,6 +4,7 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         -p|--packageName) packageName="$2"; shift ;;
         -f|--pathFolder) pathFolder="$2"; shift ;;
+        -b|--branch) branch="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -17,12 +18,13 @@ function build_package_version() {
       # Find the packageName and the pathFolder ( where the force-app data is stored )
       local packageName=$1
       local pathFolder=$2
+      local branch=$3
 
       # If standardValueSets are present in the mdapi they need to be copied over
       # you can have metadata that is covered
       [ -d "./mdapi/force-app/standardValueSets" ] && cp -rf ./mdapi/force-app/standardValueSets ${pathFolder}/main/default/
 
-      if [ "$1" = "main" ]; then
+      if [ "$branch" = "main" ]; then
         local cmd="sfdx force:package:version:create -p $packageName -w 100 -x --json"
       else
         local cmd="sfdx force:package:version:create -p $packageName -w 100 -x -b $1 --json"
@@ -47,4 +49,4 @@ function build_package_version() {
       echo "------- END BUILD PACKAGE VERSION  ----------"
   }
 
-  build_package_version $packageName $pathFolder
+  build_package_version $packageName $pathFolder $branch
