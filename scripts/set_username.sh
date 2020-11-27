@@ -9,7 +9,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 function set_username() {
-    local $org_type=$1
+    local org_type=$1
     echo "----- BEGIN defaultusername -----"
     if [ "$org_type" = "ORG" ]; then
         local instanceUrl=$(cat dist/org.json | jq -r '.result.instanceUrl')
