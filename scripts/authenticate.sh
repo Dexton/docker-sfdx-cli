@@ -15,10 +15,12 @@ function authenticate() {
       local SF_USERNAME=SF_${BITBUCKET_BRANCH^^}_USERNAME
       local SF_CLIENT=SF_${BITBUCKET_BRANCH^^}_CLIENTID
       local SF_INSTANCE=SF_${BITBUCKET_BRANCH^^}_INSTANCEURL
+      local ORG_NAME=org
     else
       local SF_USERNAME=SF_DEVHUB_USERNAME
       local SF_CLIENT=SF_DEVHUB_CLIENTID
       local SF_INSTANCE=SF_DEVHUB_INSTANCEURL
+      local ORG_NAME=devhub
     fi
   
     local salesforce_username=${!SF_USERNAME}
@@ -54,14 +56,12 @@ function authenticate() {
 
     # Take the ServerKey from environment, decrypt the base64 nad put it into the Key
     (umask  077 ; echo $server_key | base64 -d > server.key)
+      
+    local cmd="sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url -a $ORG_NAME" && (echo $cmd >&2)
+    local output=$($cmd) && (echo $output >&2)
+    local cmd_display="sfdx force:org:display -u Org --json > dist/${ORG_NAME}.json" && (echo $cmd >&2)
+    local output_display=$($cmd_display) && (echo $output >&2)
 
-    if [ "$org_type" = "ORG" ]; then
-      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url -a Org
-      sfdx force:org:display -u Org --json > dist/org.json
-    else
-      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -d -r $instance_url -a DevHub
-      sfdx force:org:display -u DevHub --json > dist/devhub.json
-    fi
 
   }
 
