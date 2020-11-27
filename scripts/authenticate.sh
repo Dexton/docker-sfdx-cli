@@ -9,14 +9,16 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 function authenticate() {
+    [ ! -d "./dist/" ] && mkdir ./dist/
+
     if [ "$org_type" = "ORG" ]; then
-      local SF_USERNAME=SF_${BITBUCKET_BRANCH^^}_USERNAME 
-      local SF_CLIENT=SF_${BITBUCKET_BRANCH^^}_CLIENTID 
+      local SF_USERNAME=SF_${BITBUCKET_BRANCH^^}_USERNAME
+      local SF_CLIENT=SF_${BITBUCKET_BRANCH^^}_CLIENTID
       local SF_INSTANCE=SF_${BITBUCKET_BRANCH^^}_INSTANCEURL
     else
       local SF_USERNAME=SF_DEVHUB_USERNAME
-      local SF_CLIENT=SF_DEVHUB_CLIENTID 
-      local SF_INSTANCE=SF_DEVHUB_INSTANCEURL 
+      local SF_CLIENT=SF_DEVHUB_CLIENTID
+      local SF_INSTANCE=SF_DEVHUB_INSTANCEURL
     fi
   
     local salesforce_username=${!SF_USERNAME}
