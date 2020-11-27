@@ -2,22 +2,28 @@
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -s|--salesforceUsername) salesforceUsername="$2"; shift ;;
-        -c|--clientId) clientId="$2"; shift ;;
-        -k|--serverKey) serverKey="$2"; shift ;;
         -o|--orgType) orgType="$2"; shift ;;
-        -i|--instanceUrl) instanceUrl="$2"; shift;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
 
 function authenticate() {
-    local salesforce_username=$1
-    local client_id=$2
-    local server_key=$3
-    local org_type=$4
-    local instance_url=$5
+    if [ "$org_type" = "ORG" ]; then
+      local SF_USERNAME=SF_${BITBUCKET_BRANCH^^}_USERNAME 
+      local SF_CLIENT=SF_${BITBUCKET_BRANCH^^}_CLIENTID 
+      local SF_INSTANCE=SF_${BITBUCKET_BRANCH^^}_INSTANCEURL
+    else
+      local SF_USERNAME=SF_DEVHUB_USERNAME
+      local SF_CLIENT=SF_DEVHUB_CLIENTID 
+      local SF_INSTANCE=SF_DEVHUB_INSTANCEURL 
+    fi
+  
+    local salesforce_username=${!SF_USERNAME}
+    local client_id=${!SF_CLIENT}
+    local server_key=$SF_SERVERKEY
+    local org_type=$1
+    local instance_url=$SF_INSTANCE
 
     if [ ! $salesforce_username ]; then
       echo "ERROR No SF_USERNAME provided in the environment variables, can't continue" >&2
@@ -48,10 +54,13 @@ function authenticate() {
     (umask  077 ; echo $server_key | base64 -d > server.key)
 
     if [ "$org_type" = "ORG" ]; then
-      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url
+      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -s -r $instance_url -a Org
+      sfdx force:org:display -u Org --json > dist/org.json
     else
-      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -d -r $instance_url
+      sfdx force:auth:jwt:grant -u $salesforce_username -i $client_id -f server.key -d -r $instance_url -a DevHub
+      sfdx force:org:display -u DevHub --json > dist/devhub.json
     fi
+
   }
 
-authenticate $salesforceUsername $clientId $serverKey $orgType $instanceUrl
+authenticate $orgType
