@@ -24,7 +24,7 @@ function build_package_version() {
       # you can have metadata that is covered
       [ -d "./mdapi/force-app/standardValueSets" ] && cp -rf ./mdapi/force-app/standardValueSets ${pathFolder}/main/default/
 
-      if [ "$branch" = "main" ]; then
+      if [ "$branch" = "main" ] || [ -z "$branch" ]; then
         local cmd="sfdx force:package:version:create -p $packageName -w 100 -x --json"
       else
         local cmd="sfdx force:package:version:create -p $packageName -w 100 -x -b $branch --json"
